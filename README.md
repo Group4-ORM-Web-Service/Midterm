@@ -8,8 +8,12 @@
 Create .env file in the root of project directory
 
 ```bash 
-SERVER_PORT="3000"
-DATABASE_URL="postgres://dbUser:dbPassword@localhost/databaseName"
+SERVER_PORT=3000 
+
+USERNAME=postgres
+PASSWORD=12345
+DATABASE=product-management
+HOST=127.0.0.1
 ```
 
 #### 2. PostgreSQL - Create a database named `[databaseName]`
@@ -27,6 +31,12 @@ npm install
 npm run dev
 ```
 
+
+### 4. Connect database and create the tables
+
+```bash
+node sync.js
+```
 Open http://localhost:3000 with your browser to see the result.
 
 
