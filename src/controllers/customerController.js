@@ -1,15 +1,16 @@
 const Response = require("../response");
 const database = require('../models');
 
+// get all customers with pagination
 const getCustomerByPagination = async (req, res) => {
   try {
     const { name, page = 1, limit = 10 } = req.query;
-    const offset = (page - 1) * limit;    
+    const offset = (page - 1) * limit;
     const whereClause = name ? { name: { [Op.like]: `%${name}%` } } : {};
 
     const { count, rows: customers } = await database.Customer.findAndCountAll({
       where: whereClause,
-       include: [
+      include: [
         { model: database.Order, include: [database.OrderDetail, database.Payment] }
       ],
       limit: parseInt(limit),
@@ -33,27 +34,30 @@ const getCustomerByPagination = async (req, res) => {
   }
 };
 
-
+// get all customers
 const getCustomer = async (req, res) => {
   try {
     const customerFiltered = await database.Customer.findOne({
-        where: { customer_id: req?.params?.id },
-        include: [
-            { model: database.Order, include: [
-                { model: database.OrderDetail, include: [
-                    database.Product,
-                    { model: database.ProductVariant }
-                ]}
-            ]}
-        ]
+      where: { customer_id: req?.params?.id },
+      include: [
+        {
+          model: database.Order, include: [
+            {
+              model: database.OrderDetail, include: [
+                database.Product,
+                { model: database.ProductVariant }
+              ]
+            }
+          ]
+        }
+      ]
     });
-    console.log(customerFiltered);
     if (customerFiltered) {
-      new Response(res).setMessage(`Success fully get order by id=${req?.params?.id} orders with employee`).setResponse(customerFiltered).send();
+      new Response(res).setMessage(`Successfully get customer by id=${req?.params?.id}.`).setResponse(customerFiltered).send();
     } else {
       new Response(res)
         .setStatusCode(404)
-        .setMessage("Order not found")
+        .setMessage("Customer not found")
         .send();
     }
   } catch (error) {
@@ -62,15 +66,16 @@ const getCustomer = async (req, res) => {
   }
 };
 
+// create new customer
 const addNewCustomer = async (req, res) => {
   try {
-    if(req?.body){
-        const customer = await database.Customer.create(req.body);
-        new Response(res).setMessage(`Success fully added  customer with employee`).setResponse(customer).send();
-    }else {
-        new Response(res)
+    if (req?.body) {
+      const customer = await database.Customer.create(req.body);
+      new Response(res).setMessage(`Successfully added  customer...!`).setResponse(customer).send();
+    } else {
+      new Response(res)
         .setStatusCode(404)
-        .setMessage("Wrong format data! customer_id not found.")
+        .setMessage("Wrong format data! customer id not found.")
         .send();
     }
   } catch (error) {
@@ -79,17 +84,18 @@ const addNewCustomer = async (req, res) => {
   }
 };
 
+// update customer
 const updateCustomer = async (req, res) => {
   try {
     const customer = await database.Customer.findByPk(req.params.id);
     if (customer) {
       await customer.update(req?.body);
-      new Response(res).setMessage(`Success fully added order with employee`).setResponse(customer).send();
+      new Response(res).setMessage(`Successfully added customer...!`).setResponse(customer).send();
     } else {
-        let message = 'Order not found'
-        if(!req?.body){
-            message= 'Wrong format data! It must be the object of order'
-        }
+      let message = 'Customer not found'
+      if (!req?.body) {
+        message = 'Wrong format data! It must be the object of customer.'
+      }
       new Response(res)
         .setStatusCode(404)
         .setMessage(message)
@@ -101,16 +107,17 @@ const updateCustomer = async (req, res) => {
   }
 };
 
+// delete customer
 const deleteCustomer = async (req, res) => {
   try {
     const customer = await database.Customer.findByPk(req?.params?.id);
     if (customer) {
       await customer.destroy();
-      new Response(res).setMessage(`Success fully deleted item id=${req?.params?.id}`).setResponse(customer).send();
+      new Response(res).setMessage(`Successfully deleted customer id=${req?.params?.id}.`).setResponse(customer).send();
     } else {
       new Response(res)
         .setStatusCode(404)
-        .setMessage("Order not found")
+        .setMessage("Customer not found...!")
         .send();
     }
   } catch (error) {
@@ -120,9 +127,9 @@ const deleteCustomer = async (req, res) => {
 };
 
 module.exports = {
-getCustomerByPagination,
-addNewCustomer,
-updateCustomer,
-getCustomer,
-deleteCustomer,
+  getCustomerByPagination,
+  addNewCustomer,
+  updateCustomer,
+  getCustomer,
+  deleteCustomer,
 };

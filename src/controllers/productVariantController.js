@@ -1,11 +1,11 @@
 const Response = require("../response");
 const database = require('../models');
 
+// get product variant with pagination
 const getProductVariantByPagination = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
     const offset = (page - 1) * limit;
-    
     const { count, rows: productVariants } = await database.ProductVariant.findAndCountAll({
       include: [
         database.Supplier,
@@ -32,25 +32,28 @@ const getProductVariantByPagination = async (req, res) => {
   }
 };
 
-
+// get all product variants
 const getProductVariant = async (req, res) => {
   try {
     const productVariantFiltered = await database.ProductVariant.findOne({
-        where: { variant_id: req?.params?.id },
-        include: [
-        { model: database.Supplier},
-        { model: database.Product, include: [{model: database.OrderDetail, include: [
-          {model: database.Order, include: [database.Customer, database.Payment]}
-        ]}] }
-        ]
+      where: { variant_id: req?.params?.id },
+      include: [
+        { model: database.Supplier },
+        {
+          model: database.Product, include: [{
+            model: database.OrderDetail, include: [
+              { model: database.Order, include: [database.Customer, database.Payment] }
+            ]
+          }]
+        }
+      ]
     });
-    console.log(productVariantFiltered);
     if (productVariantFiltered) {
-      new Response(res).setMessage(`Success fully get order by id=${req?.params?.id} orders with employee`).setResponse(productVariantFiltered).send();
+      new Response(res).setMessage(`Successfully get product variant by id=${req?.params?.id} with product`).setResponse(productVariantFiltered).send();
     } else {
       new Response(res)
         .setStatusCode(404)
-        .setMessage("Order not found")
+        .setMessage("Product variant not found")
         .send();
     }
   } catch (error) {
@@ -59,15 +62,16 @@ const getProductVariant = async (req, res) => {
   }
 };
 
+// add new product variant
 const addNewProductVariant = async (req, res) => {
   try {
-    if(req?.body){
-        const productVaraint = await database.ProductVariant.create(req.body);
-        new Response(res).setMessage(`Success fully added productVaraint with employee`).setResponse(productVaraint).send();
-    }else {
-        new Response(res)
+    if (req?.body) {
+      const productVaraint = await database.ProductVariant.create(req.body);
+      new Response(res).setMessage(`Successfully added productVaraint`).setResponse(productVaraint).send();
+    } else {
+      new Response(res)
         .setStatusCode(404)
-        .setMessage("Wrong format data! customer_id not found.")
+        .setMessage("Wrong format data! product variant id not found.")
         .send();
     }
   } catch (error) {
@@ -76,17 +80,18 @@ const addNewProductVariant = async (req, res) => {
   }
 };
 
-const updateProductVariant= async (req, res) => {
+// update product variant
+const updateProductVariant = async (req, res) => {
   try {
     const productVariant = await database.ProductVariant.findByPk(req.params.id);
     if (productVariant) {
-        await productVariant.update(req.body)
-      new Response(res).setMessage(`Success fully added order with employee`).setResponse(productVariant).send();
+      await productVariant.update(req.body)
+      new Response(res).setMessage(`Successfully added product variant`).setResponse(productVariant).send();
     } else {
-        let message = 'Order not found'
-        if(!req?.body){
-            message= 'Wrong format data! It must be the object of order'
-        }
+      let message = 'Product variant not found'
+      if (!req?.body) {
+        message = 'Wrong format data! It must be the object of product variant'
+      }
       new Response(res)
         .setStatusCode(404)
         .setMessage(message)
@@ -98,16 +103,17 @@ const updateProductVariant= async (req, res) => {
   }
 };
 
+// delete product variant
 const deleteProductVariant = async (req, res) => {
   try {
     const productVariant = await database.ProductVariant.findByPk(req?.params?.id);
     if (productVariant) {
-        await productVariant.destroy();
-      new Response(res).setMessage(`Success fully deleted item id=${req?.params?.id}`).setResponse(productVariant).send();
+      await productVariant.destroy();
+      new Response(res).setMessage(`Successfully deleted product varaint id=${req?.params?.id}`).setResponse(productVariant).send();
     } else {
       new Response(res)
         .setStatusCode(404)
-        .setMessage("Order not found")
+        .setMessage("Product varaint not found")
         .send();
     }
   } catch (error) {
@@ -117,9 +123,9 @@ const deleteProductVariant = async (req, res) => {
 };
 
 module.exports = {
-getProductVariantByPagination,
-addNewProductVariant,
-updateProductVariant,
-getProductVariant,
-deleteProductVariant,
+  getProductVariantByPagination,
+  addNewProductVariant,
+  updateProductVariant,
+  getProductVariant,
+  deleteProductVariant,
 };

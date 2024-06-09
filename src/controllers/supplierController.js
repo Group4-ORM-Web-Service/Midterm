@@ -1,10 +1,11 @@
 const Response = require("../response");
 const database = require('../models');
 
+// get all supplier with pagination
 const getSupplierByPagination = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
-    const offset = (page - 1) * limit;    
+    const offset = (page - 1) * limit;
     const { count, rows: suppliers } = await database.Supplier.findAndCountAll({
       include: [
         { model: database.ProductVariant, include: [database.Product] }
@@ -30,18 +31,17 @@ const getSupplierByPagination = async (req, res) => {
   }
 };
 
-
+// get all supplier
 const getSupplier = async (req, res) => {
   try {
     const supplierFiltered = await database.Supplier.findOne({
-        where: { supplier_id: req?.params?.id },
-        include: [
-          { model: database.ProductVariant, include: [database.Product] }
-        ]
+      where: { supplier_id: req?.params?.id },
+      include: [
+        { model: database.ProductVariant, include: [database.Product] }
+      ]
     });
-    console.log(supplierFiltered);
     if (supplierFiltered) {
-      new Response(res).setMessage(`Success fully get order by id=${req?.params?.id} orders with employee`).setResponse(supplierFiltered).send();
+      new Response(res).setMessage(`Successfully get supplier by id=${req?.params?.id} with product and pv`).setResponse(supplierFiltered).send();
     } else {
       new Response(res)
         .setStatusCode(404)
@@ -54,16 +54,16 @@ const getSupplier = async (req, res) => {
   }
 };
 
+// add new supplier
 const addNewSupplier = async (req, res) => {
   try {
-    console.log('req?.body==>', req?.body)
-    if(req?.body){
-        const supplier = await database.Supplier.create(req.body);
-        new Response(res).setMessage(`Success fully added supplier with employee`).setResponse(supplier).send();
-    }else {
-        new Response(res)
+    if (req?.body) {
+      const supplier = await database.Supplier.create(req.body);
+      new Response(res).setMessage(`Successfully added supplier`).setResponse(supplier).send();
+    } else {
+      new Response(res)
         .setStatusCode(404)
-        .setMessage("Wrong format data! customer_id not found.")
+        .setMessage("Wrong format data! supplier id not found.")
         .send();
     }
   } catch (error) {
@@ -72,17 +72,18 @@ const addNewSupplier = async (req, res) => {
   }
 };
 
-const updateSupplier= async (req, res) => {
+// update supplier
+const updateSupplier = async (req, res) => {
   try {
     const supplier = await database.Supplier.findByPk(req.params.id);
     if (supplier) {
-        await supplier.update(req.body)
-      new Response(res).setMessage(`Success fully added order with employee`).setResponse(supplier).send();
+      await supplier.update(req.body)
+      new Response(res).setMessage(`Successfully added order`).setResponse(supplier).send();
     } else {
-        let message = 'supplier not found'
-        if(!req?.body){
-            message= 'Wrong format data! It must be the object of supplier'
-        }
+      let message = 'Supplier not found'
+      if (!req?.body) {
+        message = 'Wrong format data! It must be the object of supplier'
+      }
       new Response(res)
         .setStatusCode(404)
         .setMessage(message)
@@ -94,16 +95,17 @@ const updateSupplier= async (req, res) => {
   }
 };
 
+// delete supplier
 const deleteSupplier = async (req, res) => {
   try {
     const supplier = await database.Supplier.findByPk(req?.params?.id);
     if (supplier) {
-        await supplier.destroy();
-      new Response(res).setMessage(`Success fully deleted item id=${req?.params?.id}`).setResponse(supplier).send();
+      await supplier.destroy();
+      new Response(res).setMessage(`Successfully deleted supplier id=${req?.params?.id}`).setResponse(supplier).send();
     } else {
       new Response(res)
         .setStatusCode(404)
-        .setMessage("Order not found")
+        .setMessage("Supplier not found")
         .send();
     }
   } catch (error) {
@@ -113,9 +115,9 @@ const deleteSupplier = async (req, res) => {
 };
 
 module.exports = {
-getSupplierByPagination,
-addNewSupplier,
-updateSupplier,
-getSupplier,
-deleteSupplier,
+  getSupplierByPagination,
+  addNewSupplier,
+  updateSupplier,
+  getSupplier,
+  deleteSupplier,
 };
