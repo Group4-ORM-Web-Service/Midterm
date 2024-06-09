@@ -1,6 +1,3 @@
-// const fs = require("fs");
-// const { v4: uuidv4 } = require("uuid");
-// const path = require("path");
 const Response = require("../response");
 const database = require('../models');
 
@@ -54,8 +51,6 @@ const getProduct = async (req, res) => {
         }
       ]
     });
-    // const productFiltered = await database.Product.findByPk(req?.params?.id);
-    console.log(productFiltered);
     if (productFiltered) {
       new Response(res).setMessage(`Successfully get product by id=${req?.params?.id} with product variants`).setResponse(productFiltered).send();
     } else {
@@ -72,6 +67,7 @@ const getProduct = async (req, res) => {
 
 // add new product
 const addNewProduct = async (req, res) => {
+  const transaction = await database.sequelize.transaction();
   try {
     if (req?.body) {
       const { product = null, variants = null } = req?.body;

@@ -9,10 +9,10 @@ const getSupplierByPagination = async (req, res) => {
     const { count, rows: suppliers } = await database.Supplier.findAndCountAll({
       include: [
         { model: database.ProductVariant, include: [database.Product] }
-      ],
-      limit: parseInt(limit),
-      offset: parseInt(offset),
-    });
+        ],
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+        });
 
     const totalPage = Math.ceil(count / limit);
 
@@ -45,7 +45,7 @@ const getSupplier = async (req, res) => {
     } else {
       new Response(res)
         .setStatusCode(404)
-        .setMessage("Order not found")
+        .setMessage("supplier not found")
         .send();
     }
   } catch (error) {

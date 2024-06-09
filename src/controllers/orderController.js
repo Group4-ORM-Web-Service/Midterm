@@ -1,6 +1,3 @@
-const fs = require("fs");
-const { v4: uuidv4 } = require("uuid");
-const path = require("path");
 const Response = require("../response");
 const database = require('../models');
 
@@ -78,6 +75,8 @@ const getProductOrder = async (req, res) => {
 
 // create new order
 const addNewProductOrder = async (req, res) => {
+  const transaction = await database.sequelize.transaction();
+
   try {
     if (req?.body) {
       const { order = null, orderDetails = null } = req?.body;
@@ -96,33 +95,7 @@ const addNewProductOrder = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    new Response(res).setStatusCode(500).setCustomCode(10000).send();
-  }
-};
-
-const addManyProductOrders = (req, res) => {
- try {
-    const orders = readData(filePath);
-    const data = req?.body;
-    if (Array.isArray(data)) {
-      const lOrders = data?.map((item) => ({
-        id: uuidv4(),
-        customer_id: item?.customer_id || null,
-        date: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }));
-      orders.push(...lOrders);
-      writeData(filePath, orders);
-      new Response(res).setMessage(`Success fully added orders with employee`).setResponse(lOrders).send();
-    }else {
-        new Response(res)
-        .setStatusCode(404)
-        .setMessage("Wrong format data! data must be the array of object.")
-        .send();
-    }
-  } catch (error) {
-    console.log(error);
+    await transaction.rollback();
     new Response(res).setStatusCode(500).setCustomCode(10000).send();
   }
 };
@@ -130,16 +103,8 @@ const addManyProductOrders = (req, res) => {
 // update order
 const updateProductOrder = async (req, res) => {
   try {
-    // const orders = readData(filePath);
-    // const index = orders?.findIndex((a) => a?.id === req?.params?.id);
     const order = await database.Order.findByPk(req.params.id);
     if (order && req?.body) {
-      // orders[index] = {
-      //   ...orders[index],
-      //   customer_id : req?.body?.customer_id || null,
-      //   updated_at: new Date().toISOString(),
-      // };
-      // writeData(filePath, orders);
       await order.update(req.body);
       new Response(res).setMessage(`Success fully added order with order details`).setResponse(order).send();
     } else {
@@ -161,13 +126,8 @@ const updateProductOrder = async (req, res) => {
 // delete order
 const deleteProductOrder = async (req, res) => {
   try {
-    // let orders = readData(filePath);
-    // const index = orders?.findIndex((a) => a?.id === req?.params?.id);
     const order = await database.Order.findByPk(req?.params?.id);
     if (order) {
-      // const itemDeleted = orders[index];
-      // orders = orders?.filter((a) => a?.id !== req?.params?.id);
-      // writeData(filePath, orders);
       await order.destroy();
       new Response(res).setMessage(`Success fully deleted order id=${req?.params?.id}.`).setResponse(order).send();
     } else {

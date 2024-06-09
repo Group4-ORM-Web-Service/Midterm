@@ -1,7 +1,5 @@
 const { Sequelize, DataTypes, Op } = require('sequelize');
 
-// const databaseConfig = JSON.parse(fs.readFileSync('database-config.json', 'utf8'));
-
 // const sequelize = new Sequelize('product-management', 'postgres', 'realwat2007', {
 //   host: '127.0.0.1',
 //   dialect: 'postgres',
@@ -10,6 +8,7 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: 'database.sqlite', // You can specify the path to your SQLite file here
+  logging: false,
 });
 
 const db = {};
