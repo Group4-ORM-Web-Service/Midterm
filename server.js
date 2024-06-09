@@ -7,6 +7,7 @@ const productRoutes = require('./src/routes/productRoutes');
 const productVariantRoutes = require('./src/routes/productVariantRoutes');
 const supplierRoute = require('./src/routes/supplierRoutes');
 const paymentRoutes = require('./src/routes/paymentRoutes')
+const customerRoute = require('./src/routes/customerRoutes');
 
 dotenv.config();
 
@@ -26,6 +27,9 @@ app.use("/products", productRoutes);
 app.use("/product-variants", supplierRoute);
 app.use("/suppliers", productVariantRoutes);
 app.use("/payments", paymentRoutes)
+app.use("/product-variants", productVariantRoutes);
+app.use("/customers", customerRoute);
+app.use("/suppliers", supplierRoute);
 
 app.listen(SERVER_PORT, () => {
   console.log(`Server listening at http://localhost:${SERVER_PORT}`);

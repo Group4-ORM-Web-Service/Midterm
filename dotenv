@@ -1,6 +1,0 @@
-# Set the default server port
-SERVER_PORT=3000 
-NODE_ENV=development node server.js
-
-# Set your database/API connection information here
-DATABASE_URL="postgres://dbUser:dbPassword@localhost/databaseName"
