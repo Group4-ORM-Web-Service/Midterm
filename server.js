@@ -23,9 +23,9 @@ app.get('/', (req, res) => {
 app.use("/orders", orderRoutes);
 app.use("/categories", categoryRoute);
 app.use("/products", productRoutes);
-app.use("/product-variants", supplierRoute);
+app.use("/product-variants", productVariantRoutes);
 app.use("/customers", customerRoute);
-app.use("/suppliers", productVariantRoutes);
+app.use("/suppliers", supplierRoute);
 
 app.listen(SERVER_PORT, () => {
   console.log(`Server listening at http://localhost:${SERVER_PORT}`);
