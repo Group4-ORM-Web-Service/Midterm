@@ -1,15 +1,10 @@
-// const fs = require("fs");
-// const { v4: uuidv4 } = require("uuid");
-// const path = require("path");
 const Response = require("../response");
 const database = require('../models');
 
 const getCustomerByPagination = async (req, res) => {
   try {
     const { name, page = 1, limit = 10 } = req.query;
-    const offset = (page - 1) * limit;
-    console.log('getProductOrdersByPagination:::',req.query)
-    
+    const offset = (page - 1) * limit;    
     const whereClause = name ? { name: { [Op.like]: `%${name}%` } } : {};
 
     const { count, rows: customers } = await database.Customer.findAndCountAll({

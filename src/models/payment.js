@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     payment_date: {
       type: DataTypes.DATE,
-      allowNull: false,
+      defaultValue: DataTypes.NOW
     },
     total_price: {
       type: DataTypes.FLOAT,

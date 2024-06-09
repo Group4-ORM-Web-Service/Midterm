@@ -1,6 +1,3 @@
-// const fs = require("fs");
-// const { v4: uuidv4 } = require("uuid");
-// const path = require("path");
 const Response = require("../response");
 const database = require('../models');
 
@@ -8,11 +5,8 @@ const getProductVariantByPagination = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
     const offset = (page - 1) * limit;
-    console.log('getProductOrdersByPagination:::',req.query)
     
     const { count, rows: productVariants } = await database.ProductVariant.findAndCountAll({
-    //   where: {},
-    //   include: [database.ProductVariant],
       include: [
         database.Supplier,
         { model: database.Product, include: [database.OrderDetail] }

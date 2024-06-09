@@ -8,7 +8,6 @@ const getCategoryByPagination = async (req, res) => {
   try {
     const { category_name, page = 1, limit = 10 } = req.query;
     const offset = (page - 1) * limit;
-    console.log('getProductOrdersByPagination:::',req.query)
     
     const whereClause = category_name ? { category_name: { [Op.like]: `%${category_name}%` } } : {};
 
@@ -66,7 +65,6 @@ const addNewCategory = async (req, res) => {
   try {
     if(req?.body){
         const category = await database.Category.create(req.body);
-        console.log('category==>', category)
         new Response(res).setMessage(`Success fully added category with employee`).setResponse(category).send();
     }else {
         new Response(res)
@@ -84,7 +82,6 @@ const updateCategory = async (req, res) => {
   try {
     const category = await database.Category.findByPk(req.params.id);
     if (category) {
-        console.log('res.body==>', req.body)
         await category.update(req.body);
         new Response(res).setMessage(`Success fully added order with employee`).setResponse(category).send();
     } else {

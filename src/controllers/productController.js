@@ -1,15 +1,10 @@
-// const fs = require("fs");
-// const { v4: uuidv4 } = require("uuid");
-// const path = require("path");
 const Response = require("../response");
 const database = require('../models');
 
 const getProductByPagination = async (req, res) => {
   try {
     const { product_name, page = 1, limit = 10 } = req.query;
-    const offset = (page - 1) * limit;
-    console.log('getProductOrdersByPagination:::',req.query)
-    
+    const offset = (page - 1) * limit;    
     const whereClause = product_name ? { product_name: { [Op.like]: `%${product_name}%` } } : {};
 
     const { count, rows: products } = await database.Product.findAndCountAll({
@@ -17,7 +12,8 @@ const getProductByPagination = async (req, res) => {
       include: [
        { model: database.Category},
        { model: database.ProductVariant, include: [database.Supplier]},
-        { model: database.OrderDetail, include: [{model: database.Order, include: [database.Customer, database.Payment]}] }
+        { model: database.OrderDetail, include: [{ model: database.ProductVariant},
+          {model: database.Order, include: [database.Customer, database.Payment]}] }
       ],
       limit: parseInt(limit),
       offset: parseInt(offset),
@@ -47,11 +43,10 @@ const getProduct = async (req, res) => {
       where: { product_id: req?.params?.id },
       include: [
        { model: database.ProductVariant},
-        { model: database.OrderDetail, include: [{model: database.Order, include: [database.Customer, database.Payment]}] }
+        { model: database.OrderDetail, include: [{ model: database.ProductVariant}, 
+          {model: database.Order, include: [database.Customer, database.Payment]}] }
       ]
     });
-    // const productFiltered = await database.Product.findByPk(req?.params?.id);
-    console.log(productFiltered);
     if (productFiltered) {
       new Response(res).setMessage(`Success fully get order by id=${req?.params?.id} orders with employee`).setResponse(productFiltered).send();
     } else {
@@ -67,10 +62,19 @@ const getProduct = async (req, res) => {
 };
 
 const addNewProduct = async (req, res) => {
+  const transaction = await database.sequelize.transaction();
   try {
     if(req?.body){
-        const product = await database.Product.create(req.body);
-        new Response(res).setMessage(`Success fully added product with employee`).setResponse(product).send();
+      const { product = null, variants = null } = req?.body;
+      console.log('addNewProduct==>', product, variants)
+
+      const newProduct = await database.Product.create(product, { transaction: transaction });
+      for (const detail of variants) {
+        detail.product_id = newProduct?.product_id;
+        await database.ProductVariant.create(detail, { transaction: transaction });
+      }
+      await transaction.commit();
+      new Response(res).setMessage(`Success fully added product with employee`).setResponse(newProduct).send();
     }else {
         new Response(res)
         .setStatusCode(404)
@@ -83,7 +87,7 @@ const addNewProduct = async (req, res) => {
   }
 };
 
-const updateProduct= async (req, res) => {
+const updateProduct = async (req, res) => {
   try {
     const product = await database.Product.findByPk(req.params.id);
     if (product) {

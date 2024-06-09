@@ -8,10 +8,10 @@ const getSupplierByPagination = async (req, res) => {
     const { count, rows: suppliers } = await database.Supplier.findAndCountAll({
       include: [
         { model: database.ProductVariant, include: [database.Product] }
-      ],
-      limit: parseInt(limit),
-      offset: parseInt(offset),
-    });
+        ],
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+        });
 
     const totalPage = Math.ceil(count / limit);
 
@@ -45,7 +45,7 @@ const getSupplier = async (req, res) => {
     } else {
       new Response(res)
         .setStatusCode(404)
-        .setMessage("Order not found")
+        .setMessage("supplier not found")
         .send();
     }
   } catch (error) {
@@ -79,9 +79,9 @@ const updateSupplier= async (req, res) => {
         await supplier.update(req.body)
       new Response(res).setMessage(`Success fully added order with employee`).setResponse(supplier).send();
     } else {
-        let message = 'Order not found'
+        let message = 'supplier not found'
         if(!req?.body){
-            message= 'Wrong format data! It must be the object of order'
+            message= 'Wrong format data! It must be the object of supplier'
         }
       new Response(res)
         .setStatusCode(404)
