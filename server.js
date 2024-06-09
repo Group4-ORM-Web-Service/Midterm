@@ -6,6 +6,7 @@ const categoryRoute = require('./src/routes/categoryRoutes');
 const productRoutes = require('./src/routes/productRoutes');
 const productVariantRoutes = require('./src/routes/productVariantRoutes');
 const supplierRoute = require('./src/routes/supplierRoutes');
+const customerRoute = require('./src/routes/customerRoutes');
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/orders", orderRoutes);
 app.use("/categories", categoryRoute);
 app.use("/products", productRoutes);
 app.use("/product-variants", supplierRoute);
+app.use("/customers", customerRoute);
 app.use("/suppliers", productVariantRoutes);
 
 app.listen(SERVER_PORT, () => {
