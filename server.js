@@ -11,7 +11,7 @@ const customerRoute = require('./src/routes/customerRoutes');
 
 dotenv.config();
 
-const SERVER_PORT = process.env.SERVER_PORT;
+const PORT = process.env.PORT;
 const app = express();
 
 app.use(bodyParser.json());
@@ -31,7 +31,7 @@ app.use("/product-variants", productVariantRoutes);
 app.use("/customers", customerRoute);
 app.use("/suppliers", supplierRoute);
 
-app.listen(SERVER_PORT, () => {
-  console.log(`Server listening at http://localhost:${SERVER_PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server listening at http://localhost:${process.env.PORT}`);
 });
 
