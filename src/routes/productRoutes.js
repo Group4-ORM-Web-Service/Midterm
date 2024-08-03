@@ -4,14 +4,14 @@ const productRoutes = express.Router();
 const productController = require("../controllers/productController");
 
 
-productRoutes.get("", productController.getProductByPagination);
+productRoutes.get("/products", productController.getProductByPagination);
 
-productRoutes.get("/:id", productController.getProduct);
+productRoutes.get("/products/:id", productController.getProduct);
 
-productRoutes.post("/add-product", productController.addNewProduct);
+productRoutes.post("/products/add-product", productController.addNewProduct);
 
-productRoutes.put("/update-product-by/:id", productController.updateProduct);
+productRoutes.put("/products/update-product-by/:id", productController.updateProduct);
 
-productRoutes.delete("/remove-product-by/:id", productController.deleteProduct);
+productRoutes.delete("/products/remove-product-by/:id", productController.deleteProduct);
 
 module.exports = productRoutes;

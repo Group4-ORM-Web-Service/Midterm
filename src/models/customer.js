@@ -1,7 +1,7 @@
 const CommonModel = require("./common");
 
 module.exports = (sequelize, DataTypes) => {
-  const Customer = sequelize.define('Customer', {
+  const Customer = sequelize.define('customer', {
     customer_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     ...CommonModel
   }, {
-    tableName: 'Customers',
+    tableName: 'customers',
   });
   return Customer;
 };

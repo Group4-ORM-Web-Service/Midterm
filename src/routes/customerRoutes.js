@@ -4,14 +4,14 @@ const customerRoute = express.Router();
 const customerController = require("../controllers/customerController");
 
 
-customerRoute.get("", customerController.getCustomerByPagination);
+customerRoute.get("/customers", customerController.getCustomerByPagination);
 
-customerRoute.get("/:id", customerController.getCustomer);
+customerRoute.get("/customers/:id", customerController.getCustomer);
 
-customerRoute.post("/add-customer", customerController.addNewCustomer);
+customerRoute.post("/customers/add-customer", customerController.addNewCustomer);
 
-customerRoute.put("/update-customer-by/:id", customerController.updateCustomer);
+customerRoute.put("/customers/update-customer-by/:id", customerController.updateCustomer);
 
-customerRoute.delete("/remove-customer-by/:id", customerController.deleteCustomer);
+customerRoute.delete("/customers/remove-customer-by/:id", customerController.deleteCustomer);
 
 module.exports = customerRoute;

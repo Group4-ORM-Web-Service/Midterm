@@ -11,7 +11,7 @@ yarn-error.log
 .env
 .myenv
 .node
-migrations/
+# migrations/
 
 # fastlane
 #

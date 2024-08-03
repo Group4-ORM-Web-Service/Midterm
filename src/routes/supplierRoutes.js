@@ -4,14 +4,14 @@ const supplierRoute = express.Router();
 const supplierController = require("../controllers/supplierController");
 
 
-supplierRoute.get("", supplierController.getSupplierByPagination);
+supplierRoute.get("/suppliers", supplierController.getSupplierByPagination);
 
-supplierRoute.get("/:id", supplierController.getSupplier);
+supplierRoute.get("/suppliers/:id", supplierController.getSupplier);
 
-supplierRoute.post("/add-supplier", supplierController.addNewSupplier);
+supplierRoute.post("/suppliers/add-supplier", supplierController.addNewSupplier);
 
-supplierRoute.put("/update-supplier-by/:id", supplierController.updateSupplier);
+supplierRoute.put("/suppliers/update-supplier-by/:id", supplierController.updateSupplier);
 
-supplierRoute.delete("/remove-supplier-by/:id", supplierController.deleteSupplier);
+supplierRoute.delete("/suppliers/remove-supplier-by/:id", supplierController.deleteSupplier);
 
 module.exports = supplierRoute;

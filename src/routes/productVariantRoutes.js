@@ -4,14 +4,14 @@ const productVariantRoutes = express.Router();
 const productVariantController = require("../controllers/productVariantController");
 
 
-productVariantRoutes.get("", productVariantController.getProductVariantByPagination);
+productVariantRoutes.get("/product-variants", productVariantController.getProductVariantByPagination);
 
-productVariantRoutes.get("/:id", productVariantController.getProductVariant);
+productVariantRoutes.get("/product-variants/:id", productVariantController.getProductVariant);
 
-productVariantRoutes.post("/add-product-variant", productVariantController.addNewProductVariant);
+productVariantRoutes.post("/product-variants/add-product-variant", productVariantController.addNewProductVariant);
 
-productVariantRoutes.put("/update-product-variant-by/:id", productVariantController.updateProductVariant);
+productVariantRoutes.put("/product-variants/update-product-variant-by/:id", productVariantController.updateProductVariant);
 
-productVariantRoutes.delete("/remove-product-variant-by/:id", productVariantController.deleteProductVariant);
+productVariantRoutes.delete("/product-variants/remove-product-variant-by/:id", productVariantController.deleteProductVariant);
 
 module.exports = productVariantRoutes;

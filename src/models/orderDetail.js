@@ -1,7 +1,7 @@
 const CommonModel = require("./common");
 
 module.exports = (sequelize, DataTypes) => {
-  const OrderDetail = sequelize.define('OrderDetail', {
+  const OrderDetail = sequelize.define('orderDetail', {
     orderDetail_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -10,21 +10,21 @@ module.exports = (sequelize, DataTypes) => {
     order_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Orders',
+        model: 'orders',
         key: 'order_id',
       },
     },
     product_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Products',
+        model: 'products',
         key: 'product_id',
       },
     },
     variant_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Product_Variants',
+        model: 'product_Variants',
         key: 'variant_id',
       },
     },
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     ...CommonModel
   }, {
-    tableName: 'OrderDetails',
+    tableName: 'orderDetails',
   });
   return OrderDetail;
 };

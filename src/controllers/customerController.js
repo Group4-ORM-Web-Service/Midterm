@@ -70,7 +70,8 @@ const getCustomer = async (req, res) => {
 const addNewCustomer = async (req, res) => {
   try {
     if (req?.body) {
-      const customer = await database.Customer.create(req.body);
+      const {name, address, city, country} = req.body;
+      const customer = await database.Customer.create({name, address, city, country});
       new Response(res).setMessage(`Successfully added  customer...!`).setResponse(customer).send();
     } else {
       new Response(res)

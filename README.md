@@ -37,6 +37,15 @@ npm run dev
 ```bash
 node sync.js
 ```
+
+### 5. To migrate the tables into database
+
+```bash
+npx sequelize-cli db:migrate
+```
+```bash Or run:
+npm run migration
+```
 Open http://localhost:3000 with your browser to see the result.
 
 
