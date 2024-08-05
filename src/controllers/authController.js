@@ -26,13 +26,30 @@ const register = async (req, res) => {
       password: hashedPassword,
       role,
     });
-    const customer = await Customer.create({name: username, address, city, country});
-    console.log('newUser==>', newUser , '\n', customer)
+
+    // Create a Customer if the role is 'User'
+    if (role === 'User') {
+      try {
+        const customer = await Customer.create({
+          name: username,
+          address,
+          city,
+          country,
+          user_id: newUser.user_id, // Assuming you have a foreign key relationship
+        });
+        console.log('New Customer Created: ', customer);
+      } catch (customerError) {
+        console.error('Error Creating Customer: ', customerError);
+        return res.status(500).json({ message: 'Error creating customer', error: customerError.message });
+      }
+    }  
     // Generate JWT token
     const token = generateToken({ userId: newUser.user_id, role: role });
+    const user = await User.findOne({ where: { user_id: newUser.user_id }, include: [Customer] });
 
     return res.send({
         message: "Register successful",
+        user,
         token,
     });
   } catch (error) {
@@ -46,7 +63,7 @@ const login = async (req, res) => {
 
   try {
     // Check if the user exists
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email }, include: [Customer] });
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
@@ -61,6 +78,7 @@ const login = async (req, res) => {
 
     return res.send({
         message: "Login successful",
+        user,
         token,
     });
   } catch (error) {
@@ -109,7 +127,6 @@ const updateUser = async (req, res) => {
     });
 
     if(user){
-      //  await user.update(req?.body, transaction);
       const updatedUser = await User.update({ username, email, password }, {
         where: { user_id: user?.user_id },
         transaction,

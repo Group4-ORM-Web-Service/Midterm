@@ -41,8 +41,8 @@ db.Supplier = require('./supplier')(sequelize, DataTypes);
 db.User = require('./user')(sequelize, DataTypes);
 
 // Define associations with onDelete: 'CASCADE'
-db.User.hasOne(db.Customer, { foreignKey: 'customer_id', onDelete: 'CASCADE' })
-db.Customer.belongsTo(db.User, { foreignKey: 'customer_id', onDelete: 'CASCADE' });
+db.User.hasOne(db.Customer, { foreignKey: 'user_id', onDelete: 'CASCADE' })
+db.Customer.belongsTo(db.User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 
 db.Category.hasMany(db.Product, { foreignKey: 'category_id', onDelete: 'CASCADE' });
 db.Product.belongsTo(db.Category, { foreignKey: 'category_id', onDelete: 'CASCADE' });
