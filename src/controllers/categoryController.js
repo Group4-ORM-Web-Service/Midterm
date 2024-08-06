@@ -101,6 +101,7 @@ const updateCategory = async (req, res) => {
 // delete category
 const deleteCategory = async (req, res) => {
   try {
+    console.log('req?.params?.id==>', req?.params?.id)
     const category = await database.Category.findByPk(req?.params?.id);
     if (category) {
       await category.destroy();
