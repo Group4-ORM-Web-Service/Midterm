@@ -14,12 +14,16 @@ const errorMiddleWare = require("./src/middlewares/errorMiddleWare");
 const interceptMiddleWare = require("./src/middlewares/interceptMiddleWare");
 const morgan = require('morgan');
 const authMiddleware = require('./src/middlewares/authMiddleware');
+const cors = require('cors');
 
 dotenv.config();
 
 const SERVER_PORT = process.env.SERVER_PORT;
 const app = express();
 
+// app.use(cors());
+// or configure CORS options if needed
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(bodyParser.json());
 app.use(morgan("common"))
 
