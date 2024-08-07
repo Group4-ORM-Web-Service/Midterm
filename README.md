@@ -8,7 +8,7 @@
 Create .env file in the root of project directory
 
 ```bash 
-SERVER_PORT=3000 
+SERVER_PORT=8080 
 
 USERNAME=postgres
 PASSWORD=12345
