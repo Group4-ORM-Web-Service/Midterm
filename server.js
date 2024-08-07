@@ -21,9 +21,9 @@ dotenv.config();
 const SERVER_PORT = process.env.SERVER_PORT;
 const app = express();
 
-// app.use(cors());
+app.use(cors());
 // or configure CORS options if needed
-app.use(cors({ origin: 'http://localhost:3000' }));
+// app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(bodyParser.json());
 app.use(morgan("common"))
 
