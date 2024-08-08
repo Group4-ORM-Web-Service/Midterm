@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     country: {
       type: DataTypes.STRING,
     },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     ...CommonModel
   }, {
     tableName: 'customers',

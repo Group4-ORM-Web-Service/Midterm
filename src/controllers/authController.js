@@ -7,7 +7,7 @@ const Customer = database.Customer;
 
 // Register a new user
 const register = async (req, res) => {
-  const { username, email, password, role="User", address, city, country } = req.body;
+  const { username, email, password, role="User", address, city, country, phone } = req.body;
   
   try {
     // Check if the user already exists
@@ -35,11 +35,13 @@ const register = async (req, res) => {
           address,
           city,
           country,
-          user_id: newUser.user_id, // Assuming you have a foreign key relationship
+          phone,
+          user_id: newUser.user_id,
         });
         console.log('New Customer Created: ', customer);
       } catch (customerError) {
         console.error('Error Creating Customer: ', customerError);
+        await newUser.destroy();
         return res.status(500).json({ message: 'Error creating customer', error: customerError.message });
       }
     }  
