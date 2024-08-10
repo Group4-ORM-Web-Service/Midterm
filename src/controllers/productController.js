@@ -1,6 +1,16 @@
 const Response = require("../response");
 const database = require('../models');
 
+
+const formatProducts = (data) => {
+  return {
+    "count": data?.count,
+    "products": [...data?.rows]
+  }
+
+
+}
+
 // get all product with pagination
 const getProductByPagination = async (req, res) => {
   try {
@@ -53,6 +63,32 @@ const getProduct = async (req, res) => {
     });
     if (productFiltered) {
       new Response(res).setMessage(`Successfully get product by id=${req?.params?.id} with product variants`).setResponse(productFiltered).send();
+    } else {
+      new Response(res)
+        .setStatusCode(404)
+        .setMessage("Order not found")
+        .send();
+    }
+  } catch (error) {
+    console.log(error);
+    new Response(res).setStatusCode(500).setCustomCode(10000).send();
+  }
+};
+
+const getProductByCategory = async (req, res) => {
+  try {
+    const productFiltered = await database.Product.findAndCountAll({
+      where: { category_id: req?.params?.id },
+      include: [
+        { model: database.ProductVariant },
+        { model: database.OrderDetail, include: [{ model: database.ProductVariant },
+          { model: database.Order, include: [database.Customer, database.Payment] }]
+        }
+      ]
+    });
+    if (productFiltered?.count > 0) {
+      const formattedData = formatProducts(productFiltered);
+      new Response(res).setMessage(`Successfully get product by id=${req?.params?.id} with product variants`).setResponse(formattedData).send();
     } else {
       new Response(res)
         .setStatusCode(404)
@@ -138,4 +174,5 @@ module.exports = {
   updateProduct,
   getProduct,
   deleteProduct,
+  getProductByCategory,
 };

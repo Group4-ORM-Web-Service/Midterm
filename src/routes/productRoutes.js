@@ -14,4 +14,6 @@ productRoutes.put("/products/update-product-by/:id", productController.updatePro
 
 productRoutes.delete("/products/remove-product-by/:id", productController.deleteProduct);
 
+productRoutes.get("/products/category_id/:id", productController.getProductByCategory);
+
 module.exports = productRoutes;
