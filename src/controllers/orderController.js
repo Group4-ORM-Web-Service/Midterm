@@ -79,12 +79,20 @@ const addNewProductOrder = async (req, res) => {
 
   try {
     if (req?.body) {
-      const { order = null, orderDetails = null } = req?.body;
+      const { order = null, orderDetails = null, totalPrice } = req?.body;
+      if (!order || !orderDetails || !totalPrice) {
+        throw new Error("Order, Order Details, and Payment information are required.");
+      }
+
       const newOrder = await database.Order.create(order, { transaction: transaction });
       for (const detail of orderDetails) {
         detail.order_id = newOrder?.order_id;
         await database.OrderDetail.create(detail, { transaction: transaction });
       }
+      const payment = { order_id: newOrder?.order_id, total_price: totalPrice }
+      
+      await database.Payment.create(payment, { transaction });
+
       await transaction.commit();
       new Response(res).setMessage(`Successfully added order with order details`).setResponse(newOrder).send();
     } else {
